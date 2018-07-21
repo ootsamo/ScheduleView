@@ -80,6 +80,12 @@ public class ScheduleView: UIView {
 		return delegate.bufferDateRange(withOffset: 1, for: self)
 	}
 	
+	/// A boolean indicating whether the view has been laid out at least once.
+	private var initialLayoutDone = false
+	
+	/// The scroll offset waiting to be applied if it wasn't possible to scroll the view immediately.
+	private var pendingScrollOffset: CGFloat?
+	
 	// MARK: -
 	
 	/// If set to false, the scroll view won't scroll and the pan gesture recognizer will be disabled.
@@ -217,6 +223,21 @@ public class ScheduleView: UIView {
 	public func reloadCells(for date: Date) {
 		for dayContainerView in dayContainerViews {
 			dayContainerView.reloadCells(for: date)
+		}
+	}
+	
+	/// Scrolls the view so that the given time is visible at the top.
+	public func scroll(to time: Time, animated: Bool = false) {
+		let hourRange = timelineView.hourRange
+		let timeInHours = CGFloat(time.hours) + CGFloat(time.minutes) / 60
+		let yOffset = (timeInHours - CGFloat(hourRange.lowerBound)) / CGFloat(hourRange.count) * contentHeight
+		let xOffset = scrollView.contentOffset.x
+		// Setting the offset will have no effect if the view hasn't been laid out.
+		// If that's the case, save the value and apply it later.
+		if initialLayoutDone {
+			scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: animated)
+		} else {
+			pendingScrollOffset = yOffset
 		}
 	}
 	
@@ -422,6 +443,14 @@ public class ScheduleView: UIView {
 			}
 			$0.setup()
 		}
+	}
+	
+	public override func layoutSubviews() {
+		super.layoutSubviews()
+		if let offset = pendingScrollOffset {
+			scrollView.contentOffset.y = offset
+		}
+		if !initialLayoutDone { initialLayoutDone = true }
 	}
 	
 	/// Makes sure the content is at least as tall as the available space.
