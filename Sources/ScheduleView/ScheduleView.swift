@@ -50,6 +50,9 @@ public class ScheduleView: UIView {
 	/// The gesture recognizer used to switch between dates.
 	private var panGestureRecognizer: UIPanGestureRecognizer!
 	
+	/// The gesture recognizer used to zoom the view vertically.
+	private var pinchGestureRecognizer: UIPinchGestureRecognizer!
+	
 	/// The width of a day container.
 	private var dayContainerWidth: CGFloat {
 		return scrollView.bounds.width - timelineWidth
@@ -58,6 +61,11 @@ public class ScheduleView: UIView {
 	/// The height at which the content fits the available space without scrolling.
 	private var minContentHeight: CGFloat {
 		return bounds.height - headerHeight - headerMargin - bottomMargin
+	}
+	
+	/// The current height of the content.
+	private var contentHeight: CGFloat {
+		return timelineViewHeightConstraint.constant
 	}
 	
 	/// The date range for the previous day container.
@@ -121,6 +129,33 @@ public class ScheduleView: UIView {
 		get { return timelineView.labelColor }
 		set {
 			timelineView.labelColor = newValue
+		}
+	}
+	
+	/// The height for a cell with a duration of 1 hour.
+	public var hourHeight: CGFloat = 64 {
+		didSet {
+			if hourHeight < minHourHeight { hourHeight = minHourHeight }
+			else if hourHeight > maxHourHeight { hourHeight = maxHourHeight }
+			else { updateContentHeight() }
+		}
+	}
+	
+	/// The minimum height for a cell with a duration of 1 hour.
+	public var minHourHeight: CGFloat = 40 {
+		didSet {
+			if hourHeight < minHourHeight {
+				hourHeight = minHourHeight
+			}
+		}
+	}
+	
+	/// The maximum height for a cell with a duration of 1 hour.
+	public var maxHourHeight: CGFloat = 150 {
+		didSet {
+			if hourHeight > maxHourHeight {
+				hourHeight = maxHourHeight
+			}
 		}
 	}
 	
@@ -208,6 +243,10 @@ public class ScheduleView: UIView {
 		
 		panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
 		addGestureRecognizer(panGestureRecognizer)
+		
+		pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
+		addGestureRecognizer(pinchGestureRecognizer)
+		pinchGestureRecognizer.delegate = self
 	}
 	
 	/// Handles the pan gesture and scrolls the view horizontally.
@@ -237,6 +276,15 @@ public class ScheduleView: UIView {
 		
 		recognizer.setTranslation(.zero, in: self)
 		lastPanOffset = offset
+	}
+	
+	/// Handles the pinch gesture and zooms the content vertically.
+	@objc private func handlePinchGesture(recognizer: UIPinchGestureRecognizer) {
+		let contentHeightBefore = contentHeight
+		hourHeight *= recognizer.scale
+		let locationY = recognizer.location(in: timelineView).y / contentHeight
+		scrollView.contentOffset.y += (contentHeight - contentHeightBefore) * locationY
+		recognizer.scale = 1
 	}
 	
 	/// Moves the leftmost container to the right and updates its date range.
@@ -378,8 +426,13 @@ public class ScheduleView: UIView {
 	
 	/// Makes sure the content is at least as tall as the available space.
 	private func updateContentHeight() {
-		let constant = timelineViewHeightConstraint.constant
-		timelineViewHeightConstraint.constant = max(constant, minContentHeight)
+		let hourCount = timelineView.hourRange.count - 1
+		let height = hourHeight * CGFloat(hourCount)
+		if height < minContentHeight {
+			hourHeight = minContentHeight / CGFloat(hourCount)
+		} else {
+			timelineViewHeightConstraint.constant = height
+		}
 	}
 	
 	public override var bounds: CGRect {
@@ -396,5 +449,11 @@ extension ScheduleView: UIScrollViewDelegate {
 		let offset = scrollView.contentOffset.y
 		monthLabelTopConstraint.constant = offset
 		dayContainerViews.forEach { $0.verticalScrollOffset = offset }
+	}
+}
+
+extension ScheduleView: UIGestureRecognizerDelegate {
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return gestureRecognizer == pinchGestureRecognizer
 	}
 }
