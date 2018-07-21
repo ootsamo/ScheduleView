@@ -48,6 +48,18 @@ class DayContainerView: UIView {
 		}
 	}
 	
+	var timeIndicatorColor: UIColor? {
+		didSet {
+			dayViews.forEach { $0.timeIndicatorColor = timeIndicatorColor }
+		}
+	}
+	
+	var timeIndicatorLineWidth: CGFloat? {
+		didSet {
+			dayViews.forEach { $0.timeIndicatorLineWidth = timeIndicatorLineWidth }
+		}
+	}
+	
 	var cellsForDate: ((Date) -> [ScheduleViewCell])?
 	var range: DateRange = (Date(), Date()) {
 		didSet {
@@ -110,6 +122,8 @@ class DayContainerView: UIView {
 			dateViews.append(dateView)
 			
 			let dayView = DayView(date: date)
+			dayView.timeIndicatorColor = timeIndicatorColor
+			dayView.timeIndicatorLineWidth = timeIndicatorLineWidth
 			insertSubview(dayView, belowSubview: dateView)
 			
 			[dateView, dayView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }

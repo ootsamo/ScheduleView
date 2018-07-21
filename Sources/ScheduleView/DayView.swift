@@ -24,6 +24,17 @@ class DayView: UIView {
 		}
 	}
 	
+	var timeIndicatorColor: UIColor? {
+		didSet { timeIndicatorView?.color = timeIndicatorColor }
+	}
+	
+	var timeIndicatorLineWidth: CGFloat? {
+		didSet { timeIndicatorView?.lineWidth = timeIndicatorLineWidth }
+	}
+	
+	private var timeIndicatorView: TimeIndicatorView?
+	private var timeIndicatorYConstraint: NSLayoutConstraint?
+	
 	init(date: Date, frame: CGRect = .zero) {
 		self.date = date
 		super.init(frame: frame)
@@ -42,6 +53,9 @@ class DayView: UIView {
 	
 	private func setup() {
 		setupCells()
+		if Calendar.current.isDate(date, equalTo: Date(), toGranularity: .day) {
+			setupTimeIndicator()
+		}
 	}
 	
 	func availableCellWidth(for cell: ScheduleViewCell, at columnIndex: Int, in columns: [[ScheduleViewCell]]) -> Int {
@@ -111,7 +125,7 @@ class DayView: UIView {
 	}
 	
 	private func setupCells() {
-		subviews.forEach { $0.removeFromSuperview() }
+		cells.forEach { $0.removeFromSuperview() }
 		
 		fitHorizontally(cells)
 		
@@ -161,5 +175,45 @@ class DayView: UIView {
 				constant: -2
 			))
 		}
+		
+		if let indicatorView = timeIndicatorView {
+			bringSubview(toFront: indicatorView)
+		}
+	}
+	
+	private func setupTimeIndicator() {
+		let indicatorView = TimeIndicatorView()
+		addSubview(indicatorView)
+		
+		indicatorView.color = timeIndicatorColor
+		indicatorView.lineWidth = timeIndicatorLineWidth
+		
+		indicatorView.translatesAutoresizingMaskIntoConstraints = false
+		
+		let centerYConstraint = NSLayoutConstraint(
+			item: indicatorView,
+			attribute: .centerY,
+			relatedBy: .equal,
+			toItem: self,
+			attribute: .bottom,
+			multiplier: currentTimeMultiplier,
+			constant: 0
+		)
+		
+		addConstraints([
+			centerYConstraint,
+			indicatorView.heightAnchor.constraint(equalToConstant: 10),
+			indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
+			indicatorView.trailingAnchor.constraint(equalTo: trailingAnchor)
+		])
+		
+		timeIndicatorView = indicatorView
+		timeIndicatorYConstraint = centerYConstraint
+	}
+	
+	var currentTimeMultiplier: CGFloat {
+		let components = Calendar.current.dateComponents([.hour, .minute], from: Date())
+		let time = CGFloat(components.hour ?? 0) + CGFloat(components.minute ?? 0) / 60.0
+		return (time - CGFloat(hourRange.lowerBound)) / CGFloat(hourRange.count - 1)
 	}
 }

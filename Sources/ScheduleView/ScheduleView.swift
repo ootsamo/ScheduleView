@@ -138,6 +138,20 @@ public class ScheduleView: UIView {
 		}
 	}
 	
+	/// The color used in the current time indicator.
+	public var timeIndicatorColor: UIColor = .red {
+		didSet {
+			dayContainerViews.forEach { $0.timeIndicatorColor = timeIndicatorColor }
+		}
+	}
+	
+	/// The time indicator's line width.
+	public var timeIndicatorLineWidth: CGFloat = 1.5 {
+		didSet {
+			dayContainerViews.forEach { $0.timeIndicatorLineWidth = timeIndicatorLineWidth }
+		}
+	}
+	
 	/// The height for a cell with a duration of 1 hour.
 	public var hourHeight: CGFloat = 64 {
 		didSet {
@@ -361,6 +375,11 @@ public class ScheduleView: UIView {
 		dayContainerViews.forEach { scrollView.addSubview($0) }
 		scrollView.addSubview(timelineView)
 		scrollView.addSubview(monthLabel)
+		
+		dayContainerViews.forEach {
+			$0.timeIndicatorColor = timeIndicatorColor
+			$0.timeIndicatorLineWidth = timeIndicatorLineWidth
+		}
 		
 		timelineView.backgroundColor = .white
 		

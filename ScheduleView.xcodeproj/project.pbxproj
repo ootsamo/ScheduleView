@@ -11,6 +11,7 @@
 		273815F720DD9F68007CE88E /* DateRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273815F620DD9F68007CE88E /* DateRange.swift */; };
 		273815F920DFE9E5007CE88E /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273815F820DFE9E5007CE88E /* DateView.swift */; };
 		2741E75220C9A86100E08633 /* DayContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2741E75120C9A86100E08633 /* DayContainerView.swift */; };
+		27B8B1F7210393EE006CCF04 /* TimeIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8B1F6210393EE006CCF04 /* TimeIndicatorView.swift */; };
 		27D93B16208E20D500C67418 /* ScheduleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D93B15208E20D500C67418 /* ScheduleViewCell.swift */; };
 		27D93B18208E2E6900C67418 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D93B17208E2E6900C67418 /* TimelineView.swift */; };
 		27D93B1A208E358C00C67418 /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D93B19208E358C00C67418 /* DayView.swift */; };
@@ -24,6 +25,7 @@
 		273815F620DD9F68007CE88E /* DateRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRange.swift; sourceTree = "<group>"; };
 		273815F820DFE9E5007CE88E /* DateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
 		2741E75120C9A86100E08633 /* DayContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayContainerView.swift; sourceTree = "<group>"; };
+		27B8B1F6210393EE006CCF04 /* TimeIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIndicatorView.swift; sourceTree = "<group>"; };
 		27D93B15208E20D500C67418 /* ScheduleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewCell.swift; sourceTree = "<group>"; };
 		27D93B17208E2E6900C67418 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		27D93B19208E358C00C67418 /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				27D93B17208E2E6900C67418 /* TimelineView.swift */,
 				2741E75120C9A86100E08633 /* DayContainerView.swift */,
 				27D93B19208E358C00C67418 /* DayView.swift */,
+				27B8B1F6210393EE006CCF04 /* TimeIndicatorView.swift */,
 				273815F820DFE9E5007CE88E /* DateView.swift */,
 				27095C8E2090DABD00AD7190 /* Time.swift */,
 				273815F620DD9F68007CE88E /* DateRange.swift */,
@@ -160,6 +163,7 @@
 				273815F920DFE9E5007CE88E /* DateView.swift in Sources */,
 				27D93B16208E20D500C67418 /* ScheduleViewCell.swift in Sources */,
 				2741E75220C9A86100E08633 /* DayContainerView.swift in Sources */,
+				27B8B1F7210393EE006CCF04 /* TimeIndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
