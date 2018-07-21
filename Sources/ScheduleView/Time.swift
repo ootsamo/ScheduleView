@@ -16,6 +16,15 @@ public struct Time {
 		self.hours = hours
 		self.minutes = minutes
 	}
+	
+	public init(date: Date) {
+		let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+		guard let hours = components.hour, let minutes = components.minute else {
+			fatalError("Failed to get hour and minute components from date \(date)")
+		}
+		self.hours = hours
+		self.minutes = minutes
+	}
 }
 
 extension Time: Equatable {
