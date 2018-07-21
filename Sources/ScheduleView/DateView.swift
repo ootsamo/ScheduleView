@@ -14,7 +14,7 @@ class DateView: UIView {
 	
 	private let weekdayFormatter = DateFormatter()
 	private let dayFormatter = DateFormatter()
-	private var date: Date
+	private(set) var date: Date
 	
 	init(date: Date) {
 		self.date = date

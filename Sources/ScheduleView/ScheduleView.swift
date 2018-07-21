@@ -179,6 +179,12 @@ public class ScheduleView: UIView {
 		reloadDayContainers()
 	}
 	
+	public func reloadCells(for date: Date) {
+		for dayContainerView in dayContainerViews {
+			dayContainerView.reloadCells(for: date)
+		}
+	}
+	
 	/// Sets up the schedule view.
 	private func setup() {
 		backgroundColor = .clear

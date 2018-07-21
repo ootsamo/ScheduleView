@@ -55,6 +55,13 @@ class DayContainerView: UIView {
 		}
 	}
 	
+	func reloadCells(for date: Date) {
+		let match: (Date) -> Bool = { Calendar.current.isDate(date, equalTo: $0, toGranularity: .day) }
+		if let dayView = dayViews.first(where: { match($0.date) }) {
+			dayView.cells = cellsForDate?(date) ?? []
+		}
+	}
+	
 	private var dates: [Date] {
 		let calendar = Calendar.current
 		func components(for date: Date) -> DateComponents {
